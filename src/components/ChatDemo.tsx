@@ -58,7 +58,7 @@ const ChatDemo = () => {
         </div>
 
         <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
-          <div className="bg-gradient-to-r from-violet-600 to-indigo-600 p-4">
+          <div className="bg-gradient-to-r from-red-600 to-rose-600 p-4">
             <div className="flex items-center space-x-3">
               <div className="bg-white/20 p-2 rounded-lg">
                 <Sparkles className="h-5 w-5 text-white" />
@@ -94,7 +94,7 @@ const ChatDemo = () => {
                     <Bot className="h-4 w-4 text-gray-600" />
                   </div>
                   <div className="p-4 rounded-2xl bg-gray-100">
-                    <div className="flex space-x-1">
+                <div className={`p-4 rounded-2xl ${message.role === 'user' ? 'bg-red-600 text-white' : 'bg-gray-100 text-gray-800'}`}>
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
                       <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
@@ -113,7 +113,7 @@ const ChatDemo = () => {
                   <button
                     key={index}
                     onClick={() => handlePromptClick(prompt)}
-                    className="text-xs px-3 py-1 bg-violet-100 text-violet-700 rounded-full hover:bg-violet-200 transition-colors"
+                    className="text-xs px-3 py-1 bg-red-100 text-red-700 rounded-full hover:bg-red-200 transition-colors"
                   >
                     {prompt}
                   </button>
@@ -128,12 +128,12 @@ const ChatDemo = () => {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleSend()}
                 placeholder="Ask me anything..."
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-violet-500 focus:border-transparent outline-none"
+                className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none"
               />
               <button
                 onClick={handleSend}
                 disabled={!input.trim() || isLoading}
-                className="bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-6 py-3 rounded-xl hover:from-violet-700 hover:to-indigo-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-gradient-to-r from-red-600 to-rose-600 text-white px-6 py-3 rounded-xl hover:from-red-700 hover:to-rose-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Send className="h-5 w-5" />
               </button>

@@ -8,7 +8,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-3 mb-6">
-              <div className="bg-gradient-to-r from-violet-600 to-indigo-600 p-2 rounded-lg">
+              <div className="bg-gradient-to-r from-red-600 to-rose-600 p-2 rounded-lg">
                 <Brain className="h-6 w-6 text-white" />
               </div>
               <h3 className="text-2xl font-bold">LLM.VioletInfo.ai</h3>

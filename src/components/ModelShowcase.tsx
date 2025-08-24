@@ -46,7 +46,7 @@ const ModelShowcase = () => {
               className="bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
             >
               <div className="flex items-center justify-between mb-6">
-                <div className="bg-gradient-to-r from-violet-600 to-indigo-600 p-3 rounded-lg">
+                <div className="bg-gradient-to-r from-red-600 to-rose-600 p-3 rounded-lg">
                   <model.icon className="h-6 w-6 text-white" />
                 </div>
                 <span className="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
@@ -57,7 +57,7 @@ const ModelShowcase = () => {
               <h3 className="text-xl font-bold text-gray-900 mb-2">
                 {model.name}
               </h3>
-              <p className="text-violet-600 font-medium mb-4">
+              <p className="text-red-600 font-medium mb-4">
                 {model.category}
               </p>
 
@@ -70,7 +70,7 @@ const ModelShowcase = () => {
                 ))}
               </div>
 
-              <button className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white py-3 rounded-lg font-semibold hover:from-violet-700 hover:to-indigo-700 transition-all duration-300 transform hover:scale-105">
+              <button className="w-full bg-gradient-to-r from-red-600 to-rose-600 text-white py-3 rounded-lg font-semibold hover:from-red-700 hover:to-rose-700 transition-all duration-300 transform hover:scale-105">
                 Try {model.name}
               </button>
             </div>
@@ -78,15 +78,15 @@ const ModelShowcase = () => {
         </div>
 
         <div className="mt-16 text-center">
-          <div className="bg-gradient-to-r from-violet-600 to-indigo-600 p-8 rounded-2xl text-white">
+          <div className="bg-gradient-to-r from-red-600 to-rose-600 p-8 rounded-2xl text-white">
             <h3 className="text-2xl font-bold mb-4">
               Need a Custom Model?
             </h3>
-            <p className="text-violet-100 mb-6 max-w-2xl mx-auto">
+            <p className="text-red-100 mb-6 max-w-2xl mx-auto">
               We can fine-tune models for your specific use case or deploy custom architectures 
               to meet your unique requirements.
             </p>
-            <button className="bg-white text-violet-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105">
+            <button className="bg-white text-red-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-all duration-300 transform hover:scale-105">
               Contact Our Team
             </button>
           </div>
