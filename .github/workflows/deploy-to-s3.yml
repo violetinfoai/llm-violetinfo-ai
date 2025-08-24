@@ -1,3 +1,9 @@
+- name: Who am I
+  run: aws sts get-caller-identity
+
+- name: Check bucket access
+  run: aws s3 ls "s3://${{ secrets.S3_BUCKET }}"
+
 name: Deploy to S3
 
 on:
