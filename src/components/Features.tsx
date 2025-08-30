@@ -54,7 +54,7 @@ const Features = () => {
               key={index}
               className="bg-white/70 backdrop-blur-sm p-8 rounded-2xl shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
             >
-              <div className="bg-gradient-to-r from-red-600 to-rose-600 p-3 rounded-lg w-fit mb-6">
+              <div className="bg-gradient-to-r from-green-600 to-emerald-600 p-3 rounded-lg w-fit mb-6">
                 <feature.icon className="h-6 w-6 text-white" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-3">
