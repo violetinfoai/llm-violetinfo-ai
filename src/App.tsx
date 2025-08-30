@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Plus, MessageSquare, Settings, User, Bot, Menu, X, Trash2, Edit3 } from 'lucide-react';
+import { generateResponse, generateChatTitle } from './services/gemini';
+import ApiKeySetup from './components/ApiKeySetup';
 
 interface Message {
   id: string;
@@ -76,13 +78,16 @@ const App = () => {
       timestamp: new Date()
     };
 
+    const isFirstMessage = currentChat?.messages.length === 0;
+    const messageContent = input;
+
     // Update current chat with user message
     setChats(prev => prev.map(chat => 
       chat.id === currentChatId 
         ? { 
             ...chat, 
             messages: [...chat.messages, userMessage],
-            title: chat.messages.length === 0 ? input.slice(0, 30) + (input.length > 30 ? '...' : '') : chat.title,
+            title: isFirstMessage ? 'New Chat' : chat.title,
             lastUpdated: new Date()
           }
         : chat
@@ -91,21 +96,42 @@ const App = () => {
     setInput('');
     setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const responses = [
-        "I understand your question. Let me provide you with a comprehensive answer that addresses all aspects of what you're asking about...",
-        "That's a great question! Based on my knowledge, here's what I can tell you about this topic...",
-        "I'd be happy to help you with that. Let me break this down into clear, actionable steps...",
-        "Excellent point! This is actually a fascinating topic that involves several key concepts...",
-        "I can definitely assist you with this. Here's a detailed explanation that should help clarify things...",
-        "That's an interesting perspective. Let me share some insights that might be helpful for your situation..."
-      ];
-
+    try {
+      // Generate AI response using Gemini
+      const aiResponse = await generateResponse(messageContent);
+      
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: 'assistant',
-        content: responses[Math.floor(Math.random() * responses.length)],
+        content: aiResponse,
+        timestamp: new Date()
+      };
+
+      // Generate title for first message
+      let chatTitle = '';
+      if (isFirstMessage) {
+        try {
+          chatTitle = await generateChatTitle(messageContent);
+        } catch (error) {
+          chatTitle = messageContent.slice(0, 30) + (messageContent.length > 30 ? '...' : '');
+        }
+      }
+
+      setChats(prev => prev.map(chat => 
+        chat.id === currentChatId 
+          ? { 
+              ...chat, 
+              messages: [...chat.messages, assistantMessage],
+              title: isFirstMessage ? chatTitle : chat.title,
+              lastUpdated: new Date()
+            }
+          : chat
+      ));
+    } catch (error) {
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: 'Sorry, I encountered an error while processing your request. Please make sure your API key is configured correctly and try again.',
         timestamp: new Date()
       };
 
@@ -113,13 +139,14 @@ const App = () => {
         chat.id === currentChatId 
           ? { 
               ...chat, 
-              messages: [...chat.messages, assistantMessage],
+              messages: [...chat.messages, errorMessage],
               lastUpdated: new Date()
             }
           : chat
       ));
+    } finally {
       setIsLoading(false);
-    }, 1000 + Math.random() * 2000);
+    }
   };
 
   const formatTime = (date: Date) => {
@@ -214,6 +241,9 @@ const App = () => {
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto">
+          <div className="p-6">
+            <ApiKeySetup />
+          </div>
           {currentChat?.messages.length === 0 ? (
             <div className="h-full flex items-center justify-center">
               <div className="text-center max-w-md">
