@@ -248,11 +248,6 @@ const App = () => {
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto">
-          {!apiConfigured && (
-            <div className="p-6">
-              <ApiStatus />
-            </div>
-          )}
           {currentChat?.messages.length === 0 ? (
             <div className="h-full flex items-center justify-center">
               <div className="text-center max-w-md">
