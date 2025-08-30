@@ -1,188 +1,336 @@
-import React, { useState, useEffect } from 'react';
-import { Sparkles, ArrowRight, Play, Pause, Volume2 } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Send, Plus, MessageSquare, Settings, User, Bot, Menu, X, Trash2, Edit3 } from 'lucide-react';
+
+interface Message {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+}
+
+interface Chat {
+  id: string;
+  title: string;
+  messages: Message[];
+  lastUpdated: Date;
+}
 
 const App = () => {
-  const [isPlaying, setIsPlaying] = useState(true);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [chats, setChats] = useState<Chat[]>([
+    {
+      id: '1',
+      title: 'Welcome to VioletAI',
+      messages: [
+        {
+          id: '1',
+          role: 'assistant',
+          content: 'Hello! I\'m VioletAI, your intelligent assistant. How can I help you today?',
+          timestamp: new Date()
+        }
+      ],
+      lastUpdated: new Date()
+    }
+  ]);
+  const [currentChatId, setCurrentChatId] = useState('1');
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const currentChat = chats.find(chat => chat.id === currentChatId);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+    scrollToBottom();
+  }, [currentChat?.messages]);
+
+  const createNewChat = () => {
+    const newChat: Chat = {
+      id: Date.now().toString(),
+      title: 'New Chat',
+      messages: [],
+      lastUpdated: new Date()
+    };
+    setChats(prev => [newChat, ...prev]);
+    setCurrentChatId(newChat.id);
+  };
+
+  const deleteChat = (chatId: string) => {
+    if (chats.length === 1) return;
+    setChats(prev => prev.filter(chat => chat.id !== chatId));
+    if (currentChatId === chatId) {
+      setCurrentChatId(chats.find(chat => chat.id !== chatId)?.id || '');
+    }
+  };
+
+  const sendMessage = async () => {
+    if (!input.trim() || isLoading) return;
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: input,
+      timestamp: new Date()
     };
 
-    const timer = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
+    // Update current chat with user message
+    setChats(prev => prev.map(chat => 
+      chat.id === currentChatId 
+        ? { 
+            ...chat, 
+            messages: [...chat.messages, userMessage],
+            title: chat.messages.length === 0 ? input.slice(0, 30) + (input.length > 30 ? '...' : '') : chat.title,
+            lastUpdated: new Date()
+          }
+        : chat
+    ));
 
-    window.addEventListener('mousemove', handleMouseMove);
-    
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      clearInterval(timer);
-    };
-  }, []);
+    setInput('');
+    setIsLoading(true);
+
+    // Simulate AI response
+    setTimeout(() => {
+      const responses = [
+        "I understand your question. Let me provide you with a comprehensive answer that addresses all aspects of what you're asking about...",
+        "That's a great question! Based on my knowledge, here's what I can tell you about this topic...",
+        "I'd be happy to help you with that. Let me break this down into clear, actionable steps...",
+        "Excellent point! This is actually a fascinating topic that involves several key concepts...",
+        "I can definitely assist you with this. Here's a detailed explanation that should help clarify things...",
+        "That's an interesting perspective. Let me share some insights that might be helpful for your situation..."
+      ];
+
+      const assistantMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: responses[Math.floor(Math.random() * responses.length)],
+        timestamp: new Date()
+      };
+
+      setChats(prev => prev.map(chat => 
+        chat.id === currentChatId 
+          ? { 
+              ...chat, 
+              messages: [...chat.messages, assistantMessage],
+              lastUpdated: new Date()
+            }
+          : chat
+      ));
+      setIsLoading(false);
+    }, 1000 + Math.random() * 2000);
+  };
 
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString('en-US', { 
-      hour12: false,
       hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit'
+      minute: '2-digit'
     });
   };
 
   return (
-    <div className="min-h-screen bg-black overflow-hidden relative">
-      {/* Animated Background */}
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-blue-900/20 to-green-900/20"></div>
-        <div 
-          className="absolute w-96 h-96 bg-gradient-to-r from-pink-500/30 to-violet-500/30 rounded-full blur-3xl animate-pulse"
-          style={{
-            left: `${mousePosition.x / 10}px`,
-            top: `${mousePosition.y / 10}px`,
-            transform: 'translate(-50%, -50%)'
-          }}
-        ></div>
-        <div className="absolute top-1/4 right-1/4 w-72 h-72 bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-full blur-2xl animate-bounce"></div>
-        <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-full blur-2xl animate-pulse"></div>
+    <div className="flex h-screen bg-gray-50">
+      {/* Sidebar */}
+      <div className={`${isSidebarOpen ? 'w-80' : 'w-0'} transition-all duration-300 bg-gray-900 text-white flex flex-col overflow-hidden`}>
+        <div className="p-4 border-b border-gray-700">
+          <button
+            onClick={createNewChat}
+            className="w-full flex items-center justify-center space-x-2 bg-violet-600 hover:bg-violet-700 px-4 py-3 rounded-lg transition-colors"
+          >
+            <Plus className="h-4 w-4" />
+            <span>New Chat</span>
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-4 space-y-2">
+          {chats.map((chat) => (
+            <div
+              key={chat.id}
+              onClick={() => setCurrentChatId(chat.id)}
+              className={`group relative p-3 rounded-lg cursor-pointer transition-colors ${
+                currentChatId === chat.id ? 'bg-gray-700' : 'hover:bg-gray-800'
+              }`}
+            >
+              <div className="flex items-center space-x-3">
+                <MessageSquare className="h-4 w-4 text-gray-400" />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">{chat.title}</p>
+                  <p className="text-xs text-gray-400">{formatTime(chat.lastUpdated)}</p>
+                </div>
+              </div>
+              
+              {chats.length > 1 && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteChat(chat.id);
+                  }}
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1 hover:bg-gray-600 rounded transition-all"
+                >
+                  <Trash2 className="h-3 w-3" />
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="p-4 border-t border-gray-700 space-y-2">
+          <button className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-800 transition-colors">
+            <Settings className="h-4 w-4" />
+            <span>Settings</span>
+          </button>
+          <button className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-800 transition-colors">
+            <User className="h-4 w-4" />
+            <span>Account</span>
+          </button>
+        </div>
       </div>
 
-      {/* Floating Particles */}
-      <div className="absolute inset-0 overflow-hidden">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-2 h-2 bg-white/20 rounded-full animate-ping"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: `${2 + Math.random() * 3}s`
-            }}
-          ></div>
-        ))}
-      </div>
-
-      {/* Main Content */}
-      <div className="relative z-10 min-h-screen flex flex-col">
+      {/* Main Chat Area */}
+      <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="p-6">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-r from-pink-500 to-violet-500 rounded-xl flex items-center justify-center animate-spin-slow">
-                <Sparkles className="h-6 w-6 text-white" />
+        <header className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              {isSidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </button>
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-gradient-to-r from-violet-600 to-purple-600 rounded-lg flex items-center justify-center">
+                <Bot className="h-5 w-5 text-white" />
               </div>
-              <div>
-                <h1 className="text-2xl font-bold text-white">AestheticUI</h1>
-                <p className="text-gray-400 text-sm">Dynamic Experience</p>
-              </div>
+              <h1 className="text-xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                VioletAI
+              </h1>
             </div>
-            
-            <div className="flex items-center space-x-4">
-              <div className="text-white font-mono text-lg bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg border border-white/20">
-                {formatTime(currentTime)}
-              </div>
-              <button
-                onClick={() => setIsPlaying(!isPlaying)}
-                className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20 hover:bg-white/20 transition-all duration-300"
-              >
-                {isPlaying ? <Pause className="h-5 w-5 text-white" /> : <Play className="h-5 w-5 text-white" />}
-              </button>
-            </div>
+          </div>
+          <div className="text-sm text-gray-500">
+            {currentChat?.title}
           </div>
         </header>
 
-        {/* Hero Section */}
-        <main className="flex-1 flex items-center justify-center px-6">
-          <div className="text-center max-w-4xl">
-            <div className="mb-8">
-              <div className="inline-block">
-                <h2 className="text-7xl md:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400 animate-gradient-x mb-6">
-                  DYNAMIC
-                </h2>
-                <div className="h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 animate-gradient-x rounded-full"></div>
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto">
+          {currentChat?.messages.length === 0 ? (
+            <div className="h-full flex items-center justify-center">
+              <div className="text-center max-w-md">
+                <div className="w-16 h-16 bg-gradient-to-r from-violet-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                  <Bot className="h-8 w-8 text-white" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-4">Welcome to VioletAI</h2>
+                <p className="text-gray-600 mb-6">
+                  Start a conversation with our advanced AI assistant. Ask questions, get help with tasks, or just chat!
+                </p>
+                <div className="space-y-2">
+                  <button
+                    onClick={() => setInput("What can you help me with?")}
+                    className="block w-full text-left p-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-sm"
+                  >
+                    "What can you help me with?"
+                  </button>
+                  <button
+                    onClick={() => setInput("Explain machine learning in simple terms")}
+                    className="block w-full text-left p-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-sm"
+                  >
+                    "Explain machine learning in simple terms"
+                  </button>
+                  <button
+                    onClick={() => setInput("Help me write a professional email")}
+                    className="block w-full text-left p-3 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-sm"
+                  >
+                    "Help me write a professional email"
+                  </button>
+                </div>
               </div>
             </div>
-
-            <p className="text-2xl md:text-3xl text-gray-300 mb-12 leading-relaxed">
-              Experience the future of
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400 font-semibold"> interactive design</span>
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
-              <button className="group relative px-8 py-4 bg-gradient-to-r from-pink-500 to-violet-500 text-white rounded-2xl font-semibold text-lg overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-2xl">
-                <div className="absolute inset-0 bg-gradient-to-r from-violet-500 to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="relative flex items-center space-x-2">
-                  <span>Explore Now</span>
-                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </button>
-              
-              <button className="px-8 py-4 border-2 border-white/30 text-white rounded-2xl font-semibold text-lg backdrop-blur-sm hover:border-white/50 hover:bg-white/10 transition-all duration-300">
-                Learn More
-              </button>
-            </div>
-
-            {/* Interactive Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[
-                { title: 'Fluid Motion', desc: 'Smooth animations', color: 'from-red-500 to-orange-500' },
-                { title: 'Responsive', desc: 'Adaptive layouts', color: 'from-blue-500 to-cyan-500' },
-                { title: 'Interactive', desc: 'Engaging elements', color: 'from-green-500 to-emerald-500' }
-              ].map((card, index) => (
-                <div
-                  key={index}
-                  className="group relative p-6 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 hover:border-white/30 transition-all duration-500 hover:scale-105 cursor-pointer"
-                  style={{
-                    animationDelay: `${index * 0.2}s`
-                  }}
-                >
-                  <div className={`absolute inset-0 bg-gradient-to-r ${card.color} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-300`}></div>
-                  <div className="relative">
-                    <div className={`w-12 h-12 bg-gradient-to-r ${card.color} rounded-xl mb-4 flex items-center justify-center`}>
-                      <Volume2 className="h-6 w-6 text-white" />
+          ) : (
+            <div className="space-y-6 p-6">
+              {currentChat?.messages.map((message) => (
+                <div key={message.id} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`flex items-start space-x-3 max-w-[80%] ${message.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                      message.role === 'user' 
+                        ? 'bg-violet-600' 
+                        : 'bg-gray-200'
+                    }`}>
+                      {message.role === 'user' ? 
+                        <User className="h-4 w-4 text-white" /> : 
+                        <Bot className="h-4 w-4 text-gray-600" />
+                      }
                     </div>
-                    <h3 className="text-xl font-bold text-white mb-2">{card.title}</h3>
-                    <p className="text-gray-400">{card.desc}</p>
+                    <div className={`p-4 rounded-2xl ${
+                      message.role === 'user' 
+                        ? 'bg-violet-600 text-white' 
+                        : 'bg-white border border-gray-200 text-gray-800'
+                    }`}>
+                      <p className="whitespace-pre-wrap">{message.content}</p>
+                      <p className={`text-xs mt-2 ${
+                        message.role === 'user' ? 'text-violet-200' : 'text-gray-400'
+                      }`}>
+                        {formatTime(message.timestamp)}
+                      </p>
+                    </div>
                   </div>
                 </div>
               ))}
+              
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="flex items-start space-x-3 max-w-[80%]">
+                    <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
+                      <Bot className="h-4 w-4 text-gray-600" />
+                    </div>
+                    <div className="p-4 rounded-2xl bg-white border border-gray-200">
+                      <div className="flex space-x-1">
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
             </div>
-          </div>
-        </main>
+          )}
+        </div>
 
-        {/* Bottom Navigation */}
-        <footer className="p-6">
-          <div className="flex justify-center">
-            <div className="flex space-x-2 bg-white/10 backdrop-blur-sm rounded-2xl p-2 border border-white/20">
-              {['Home', 'About', 'Work', 'Contact'].map((item, index) => (
+        {/* Input Area */}
+        <div className="border-t border-gray-200 bg-white p-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-end space-x-3">
+              <div className="flex-1 relative">
+                <textarea
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      sendMessage();
+                    }
+                  }}
+                  placeholder="Message VioletAI..."
+                  className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-2xl focus:ring-2 focus:ring-violet-500 focus:border-transparent outline-none resize-none max-h-32 min-h-[48px]"
+                  rows={1}
+                />
                 <button
-                  key={item}
-                  className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 ${
-                    index === 0 
-                      ? 'bg-white/20 text-white' 
-                      : 'text-gray-400 hover:text-white hover:bg-white/10'
-                  }`}
+                  onClick={sendMessage}
+                  disabled={!input.trim() || isLoading}
+                  className="absolute right-2 bottom-2 w-8 h-8 bg-violet-600 hover:bg-violet-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg flex items-center justify-center transition-colors"
                 >
-                  {item}
+                  <Send className="h-4 w-4" />
                 </button>
-              ))}
+              </div>
             </div>
+            <p className="text-xs text-gray-500 mt-2 text-center">
+              VioletAI can make mistakes. Consider checking important information.
+            </p>
           </div>
-        </footer>
+        </div>
       </div>
-
-      {/* Cursor Follower */}
-      <div 
-        className="fixed w-4 h-4 bg-gradient-to-r from-pink-400 to-violet-400 rounded-full pointer-events-none z-50 mix-blend-difference"
-        style={{
-          left: `${mousePosition.x}px`,
-          top: `${mousePosition.y}px`,
-          transform: 'translate(-50%, -50%)'
-        }}
-      ></div>
     </div>
   );
 };
