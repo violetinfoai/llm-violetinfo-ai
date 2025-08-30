@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Plus, MessageSquare, Settings, User, Bot, Menu, X, Trash2, Edit3 } from 'lucide-react';
-import { generateResponse, generateChatTitle } from './services/gemini';
-import ApiKeySetup from './components/ApiKeySetup';
+import { generateResponse, generateChatTitle, checkApiHealth } from './services/api';
+import ApiStatus from './components/ApiStatus';
 
 interface Message {
   id: string;
@@ -37,9 +37,16 @@ const App = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [apiConfigured, setApiConfigured] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const currentChat = chats.find(chat => chat.id === currentChatId);
+
+  useEffect(() => {
+    checkApiHealth().then(health => {
+      setApiConfigured(health.apiConfigured);
+    });
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -241,9 +248,11 @@ const App = () => {
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto">
-          <div className="p-6">
-            <ApiKeySetup />
-          </div>
+          {!apiConfigured && (
+            <div className="p-6">
+              <ApiStatus />
+            </div>
+          )}
           {currentChat?.messages.length === 0 ? (
             <div className="h-full flex items-center justify-center">
               <div className="text-center max-w-md">
