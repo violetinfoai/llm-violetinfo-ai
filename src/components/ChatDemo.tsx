@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Send, User, Bot, Sparkles } from 'lucide-react';
 
 const samplePrompts = [
-  "Explain quantum computing in simple terms",
+  "Do you want know about me ?",
   "Write a creative story about time travel",
   "Help me plan a sustainable garden",
   "Create a marketing strategy for a tech startup"
