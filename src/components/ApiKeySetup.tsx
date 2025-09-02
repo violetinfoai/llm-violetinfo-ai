@@ -8,7 +8,7 @@ const ApiKeySetup = () => {
 
   useEffect(() => {
     const key = import.meta.env.VITE_GEMINI_API_KEY;
-    setIsConfigured(!!key && key !== 'your_gemini_api_key_here');
+    setIsConfigured(!!key && key !== 'AIzaSyAlunrNFyfw6QcpD7oDODZAbYeyTn9ZruI');
   }, []);
 
   const handleSave = () => {
@@ -49,7 +49,7 @@ const ApiKeySetup = () => {
                   type={showKey ? 'text' : 'password'}
                   value={apiKey}
                   onChange={(e) => setApiKey(e.target.value)}
-                  placeholder="Enter your Gemini API key"
+                  placeholder="AIzaSyAlunrNFyfw6QcpD7oDODZAbYeyTn9ZruI"
                   className="w-full px-3 py-2 pr-10 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none"
                 />
                 <button
