@@ -3,16 +3,13 @@ import { Send, User, Bot, Sparkles } from 'lucide-react';
 
 const samplePrompts = [
   "Do you want know about me ?",
-  "Write a creative story about time travel",
-  "Help me plan a sustainable garden",
-  "Create a marketing strategy for a tech startup"
-];
+  ];
 
 const ChatDemo = () => {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: 'Hello! I\'m an AI assistant powered by advanced language models. Ask me anything or try one of the sample prompts below!'
+      content: 'HI ! I\'m an AI assistant powered by advanced language models. Ask me anything or try one of the sample prompts below!'
     }
   ]);
   const [input, setInput] = useState('');
