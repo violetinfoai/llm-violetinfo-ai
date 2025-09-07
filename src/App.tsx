@@ -213,10 +213,10 @@ const App = () => {
       {/* Admin Panel Modal */}
       {showAdminPanel && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-gray-900 border border-red-500/30 rounded-2xl p-8 max-w-md w-full">
+          <div className="bg-gray-900 border border-amber-500/30 rounded-2xl p-8 max-w-md w-full">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-r from-red-600 to-red-700 rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-gradient-to-r from-amber-500 to-yellow-600 rounded-lg flex items-center justify-center">
                   <Shield className="h-5 w-5 text-white" />
                 </div>
                 <h2 className="text-xl font-bold text-white">Admin Panel</h2>
@@ -240,7 +240,7 @@ const App = () => {
                     value={apiKey}
                     onChange={(e) => setApiKey(e.target.value)}
                     placeholder="Enter your Gemini API key..."
-                    className="w-full px-4 py-3 bg-black border border-red-500/30 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none"
+                    className="w-full px-4 py-3 bg-black border border-amber-500/30 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none"
                   />
                   <button
                     type="button"
@@ -266,7 +266,7 @@ const App = () => {
               <div className="flex space-x-3 pt-4">
                 <button
                   onClick={saveApiKey}
-                  className="flex-1 bg-gradient-to-r from-red-600 to-red-700 text-white px-4 py-3 rounded-lg font-medium hover:from-red-700 hover:to-red-800 transition-all duration-300 flex items-center justify-center space-x-2"
+                  className="flex-1 bg-gradient-to-r from-amber-500 to-yellow-600 text-white px-4 py-3 rounded-lg font-medium hover:from-amber-600 hover:to-yellow-700 transition-all duration-300 flex items-center justify-center space-x-2"
                 >
                   <Save className="h-4 w-4" />
                   <span>Save Key</span>
@@ -275,7 +275,7 @@ const App = () => {
                   href="https://makersuite.google.com/app/apikey"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-3 border border-red-500/30 text-red-400 rounded-lg hover:bg-red-500/10 transition-colors text-sm font-medium"
+                  className="px-4 py-3 border border-amber-500/30 text-amber-400 rounded-lg hover:bg-amber-500/10 transition-colors text-sm font-medium"
                 >
                   Get API Key
                 </a>
@@ -286,11 +286,11 @@ const App = () => {
       )}
 
       {/* Sidebar */}
-      <div className={`${isSidebarOpen ? 'w-80' : 'w-0'} transition-all duration-300 bg-gray-900 border-r border-red-500/20 text-white flex flex-col overflow-hidden`}>
-        <div className="p-4 border-b border-red-500/20">
+      <div className={`${isSidebarOpen ? 'w-80' : 'w-0'} transition-all duration-300 bg-gray-900 border-r border-amber-500/20 text-white flex flex-col overflow-hidden`}>
+        <div className="p-4 border-b border-amber-500/20">
           <button
             onClick={createNewChat}
-            className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 px-4 py-3 rounded-lg transition-all duration-300"
+            className="w-full flex items-center justify-center space-x-2 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 px-4 py-3 rounded-lg transition-all duration-300"
           >
             <Plus className="h-4 w-4" />
             <span>New Chat</span>
@@ -303,11 +303,11 @@ const App = () => {
               key={chat.id}
               onClick={() => setCurrentChatId(chat.id)}
               className={`group relative p-3 rounded-lg cursor-pointer transition-colors ${
-                currentChatId === chat.id ? 'bg-red-900/30 border border-red-500/30' : 'hover:bg-gray-800'
+                currentChatId === chat.id ? 'bg-amber-900/30 border border-amber-500/30' : 'hover:bg-gray-800'
               }`}
             >
               <div className="flex items-center space-x-3">
-                <MessageSquare className="h-4 w-4 text-red-400" />
+                <MessageSquare className="h-4 w-4 text-amber-400" />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate">{chat.title}</p>
                   <p className="text-xs text-gray-400">{formatTime(chat.lastUpdated)}</p>
@@ -320,32 +320,32 @@ const App = () => {
                     e.stopPropagation();
                     deleteChat(chat.id);
                   }}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1 hover:bg-red-600/20 rounded transition-all"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 p-1 hover:bg-amber-600/20 rounded transition-all"
                 >
-                  <Trash2 className="h-3 w-3 text-red-400" />
+                  <Trash2 className="h-3 w-3 text-amber-400" />
                 </button>
               )}
             </div>
           ))}
         </div>
 
-        <div className="p-4 border-t border-red-500/20 space-y-2">
+        <div className="p-4 border-t border-amber-500/20 space-y-2">
           <button 
             onClick={() => setShowAdminPanel(true)}
             className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-800 transition-colors"
           >
-            <Key className="h-4 w-4 text-red-400" />
+            <Key className="h-4 w-4 text-amber-400" />
             <span>Admin Panel</span>
             <div className={`ml-auto w-2 h-2 rounded-full ${
-              apiKeyStatus === 'valid' ? 'bg-green-500' : 'bg-red-500'
+              apiKeyStatus === 'valid' ? 'bg-green-500' : 'bg-amber-500'
             }`}></div>
           </button>
           <button className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-800 transition-colors">
-            <Settings className="h-4 w-4 text-red-400" />
+            <Settings className="h-4 w-4 text-amber-400" />
             <span>Settings</span>
           </button>
           <button className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-800 transition-colors">
-            <User className="h-4 w-4 text-red-400" />
+            <User className="h-4 w-4 text-amber-400" />
             <span>Account</span>
           </button>
         </div>
@@ -354,7 +354,7 @@ const App = () => {
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="bg-gray-900 border-b border-red-500/20 p-4 flex items-center justify-between">
+        <header className="bg-gray-900 border-b border-amber-500/20 p-4 flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -363,10 +363,10 @@ const App = () => {
               {isSidebarOpen ? <X className="h-5 w-5 text-white" /> : <Menu className="h-5 w-5 text-white" />}
             </button>
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-red-600 to-red-700 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-r from-amber-500 to-yellow-600 rounded-lg flex items-center justify-center">
                 <Bot className="h-5 w-5 text-white" />
               </div>
-              <h1 className="text-xl font-bold bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-transparent">
+              <h1 className="text-xl font-bold bg-gradient-to-r from-amber-500 to-yellow-600 bg-clip-text text-transparent">
                 VioletAI
               </h1>
             </div>
@@ -381,7 +381,7 @@ const App = () => {
           {currentChat?.messages.length === 0 ? (
             <div className="h-full flex items-center justify-center">
               <div className="text-center max-w-md">
-                <div className="w-16 h-16 bg-gradient-to-r from-red-600 to-red-700 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <div className="w-16 h-16 bg-gradient-to-r from-amber-500 to-yellow-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
                   <Bot className="h-8 w-8 text-white" />
                 </div>
                 <h2 className="text-2xl font-bold text-white mb-4">Welcome to VioletAI</h2>
@@ -391,19 +391,19 @@ const App = () => {
                 <div className="space-y-2">
                   <button
                     onClick={() => setInput("What can you help me with?")}
-                    className="block w-full text-left p-3 bg-gray-800 hover:bg-gray-700 border border-red-500/20 rounded-lg transition-colors text-sm text-white"
+                    className="block w-full text-left p-3 bg-gray-800 hover:bg-gray-700 border border-amber-500/20 rounded-lg transition-colors text-sm text-white"
                   >
                     "What can you help me with?"
                   </button>
                   <button
                     onClick={() => setInput("Explain machine learning in simple terms")}
-                    className="block w-full text-left p-3 bg-gray-800 hover:bg-gray-700 border border-red-500/20 rounded-lg transition-colors text-sm text-white"
+                    className="block w-full text-left p-3 bg-gray-800 hover:bg-gray-700 border border-amber-500/20 rounded-lg transition-colors text-sm text-white"
                   >
                     "Explain machine learning in simple terms"
                   </button>
                   <button
                     onClick={() => setInput("Help me write a professional email")}
-                    className="block w-full text-left p-3 bg-gray-800 hover:bg-gray-700 border border-red-500/20 rounded-lg transition-colors text-sm text-white"
+                    className="block w-full text-left p-3 bg-gray-800 hover:bg-gray-700 border border-amber-500/20 rounded-lg transition-colors text-sm text-white"
                   >
                     "Help me write a professional email"
                   </button>
@@ -417,22 +417,22 @@ const App = () => {
                   <div className={`flex items-start space-x-3 max-w-[80%] ${message.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
                       message.role === 'user' 
-                        ? 'bg-gradient-to-r from-red-600 to-red-700' 
-                        : 'bg-gray-700 border border-red-500/20'
+                        ? 'bg-gradient-to-r from-amber-500 to-yellow-600' 
+                        : 'bg-gray-700 border border-amber-500/20'
                     }`}>
                       {message.role === 'user' ? 
                         <User className="h-4 w-4 text-white" /> : 
-                        <Bot className="h-4 w-4 text-red-400" />
+                        <Bot className="h-4 w-4 text-amber-400" />
                       }
                     </div>
                     <div className={`p-4 rounded-2xl ${
                       message.role === 'user' 
-                        ? 'bg-gradient-to-r from-red-600 to-red-700 text-white' 
-                        : 'bg-gray-800 border border-red-500/20 text-gray-100'
+                        ? 'bg-gradient-to-r from-amber-500 to-yellow-600 text-white' 
+                        : 'bg-gray-800 border border-amber-500/20 text-gray-100'
                     }`}>
                       <p className="whitespace-pre-wrap">{message.content}</p>
                       <p className={`text-xs mt-2 ${
-                        message.role === 'user' ? 'text-red-200' : 'text-gray-400'
+                        message.role === 'user' ? 'text-amber-200' : 'text-gray-400'
                       }`}>
                         {formatTime(message.timestamp)}
                       </p>
@@ -444,14 +444,14 @@ const App = () => {
               {isLoading && (
                 <div className="flex justify-start">
                   <div className="flex items-start space-x-3 max-w-[80%]">
-                    <div className="w-8 h-8 rounded-full bg-gray-700 border border-red-500/20 flex items-center justify-center">
-                      <Bot className="h-4 w-4 text-red-400" />
+                    <div className="w-8 h-8 rounded-full bg-gray-700 border border-amber-500/20 flex items-center justify-center">
+                      <Bot className="h-4 w-4 text-amber-400" />
                     </div>
-                    <div className="p-4 rounded-2xl bg-gray-800 border border-red-500/20">
+                    <div className="p-4 rounded-2xl bg-gray-800 border border-amber-500/20">
                       <div className="flex space-x-1">
-                        <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce"></div>
-                        <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                        <div className="w-2 h-2 bg-red-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                        <div className="w-2 h-2 bg-amber-400 rounded-full animate-bounce"></div>
+                        <div className="w-2 h-2 bg-amber-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                        <div className="w-2 h-2 bg-amber-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
                       </div>
                     </div>
                   </div>
@@ -463,7 +463,7 @@ const App = () => {
         </div>
 
         {/* Input Area */}
-        <div className="border-t border-red-500/20 bg-gray-900 p-4">
+        <div className="border-t border-amber-500/20 bg-gray-900 p-4">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-end space-x-3">
               <div className="flex-1 relative">
@@ -477,13 +477,13 @@ const App = () => {
                     }
                   }}
                   placeholder="Message VioletAI..."
-                  className="w-full px-4 py-3 pr-12 bg-black border border-red-500/30 rounded-2xl focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none resize-none max-h-32 min-h-[48px] text-white placeholder-gray-500"
+                  className="w-full px-4 py-3 pr-12 bg-black border border-amber-500/30 rounded-2xl focus:ring-2 focus:ring-amber-500 focus:border-transparent outline-none resize-none max-h-32 min-h-[48px] text-white placeholder-gray-500"
                   rows={1}
                 />
                 <button
                   onClick={sendMessage}
                   disabled={!input.trim() || isLoading}
-                  className="absolute right-2 bottom-2 w-8 h-8 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg flex items-center justify-center transition-all duration-300"
+                  className="absolute right-2 bottom-2 w-8 h-8 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg flex items-center justify-center transition-all duration-300"
                 >
                   <Send className="h-4 w-4" />
                 </button>
